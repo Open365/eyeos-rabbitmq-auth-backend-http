@@ -1,0 +1,7 @@
+/.idea
+node_modules/
+/src/rabbitmq-auth-backend-http.pid
+/build/
+/commit.properties
+*.log
+/pkgs/

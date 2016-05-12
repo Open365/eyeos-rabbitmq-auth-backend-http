@@ -1,0 +1,17 @@
+
+[Unit]
+Description=rabbitmq-auth-backend-http service
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=notify
+NotifyAccess=all
+# Environment setting can be specified more than once (see systemd.exec(5))
+Environment="LOG4JS_CONFIG=/opt/eyeos-rabbitmq-auth-backend-http/log4js.config.json"
+EnvironmentFile=/opt/eyeos-rabbitmq-auth-backend-http/envars
+ExecStart=/opt/eyeos-rabbitmq-auth-backend-http/eyeos-rabbitmq-auth-backend-http.js
+# ExecStartPost setting can be specified more than once (see systemd.service(5))
+Restart=always
