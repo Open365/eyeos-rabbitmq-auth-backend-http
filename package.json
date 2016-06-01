@@ -2,7 +2,7 @@
   "name": "rabbitmq-auth-backend-http",
   "author": "eyeos@eyeos.com",
   "homepage": "http://www.eyeos.com",
-  "version": "0.0.148",
+  "version": "0.0.149",
   "description": "rabbitmq_auth_backend_http ========================== eyeOS Authentication&Authorization HTTP backend for RabbitMQ.  Follows the interface required by the RabbitMQ HTTP auth plugin (rabbitmq_auth_backend_http => http://www.rabbitmq.com/community-plugins.html)",
   "dependencies": {
     "eyeos-service-ready-notify": "*",
