@@ -18,37 +18,33 @@
 */
 
 var log2out = require('log2out');
-var settings = require('../../settings');
+var globalSettings = require('../../settings');
 
-var ExchangeValidator = function() {
+var ExchangeValidator = function(settings) {
     this.logger= log2out.getLogger('ExchangeValidator');
+    this.settings= settings || globalSettings;
 };
 
 ExchangeValidator.prototype.validate = function(params, callback) {
-    var exchangename;
-    if (params.username[0] === '{') {
+    var username;
+    try {
         var card = JSON.parse(params.username);
-        exchangename = card.username + '@' + card.domain;
-    } else {
-        exchangename = params.username[0] === '{' ? JSON.parse(params.username).username : params.username;
+        username = card.username + '@' + card.domain;
+    } catch(e) {
+        username = params.username;
     }
     var name = params.name;
-    var validate = false;
-    var parts = name.split('_');
 
-    if (settings.disabled) {
-        validate = true;
-    } else if (parts[1] === exchangename && parts[0] === 'user') {
-        validate = true;
-    } else if (exchangename === settings.masterUser) {
-        validate = true;
+    if (this.settings.disabled || username === this.settings.masterUser) {
+        return callback(null, 'allow');
     }
 
-    if (validate) {
-        callback(null, 'allow');
-    } else {
-        callback(new Error('Unauthorized user'));
+    var match = name.match(/^user_(.*?)(_app_[0-9a-f-]+)?$/);
+
+    if (match !== null && match[1] === username) {
+        return callback(null, 'allow');
     }
+    callback(new Error('Unauthorized user'));
 };
 
 module.exports = ExchangeValidator;
