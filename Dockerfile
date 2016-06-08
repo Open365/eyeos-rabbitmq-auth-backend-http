@@ -1,6 +1,7 @@
-FROM docker-registry.eyeosbcn.com/eyeos-fedora21-node-base
+FROM docker-registry.eyeosbcn.com/alpine6-node-base
 
 ENV WHATAMI rabbitmq-auth-backend-http
+ENV InstallationDir /var/service/
 
 MAINTAINER eyeos
 
@@ -10,5 +11,9 @@ CMD eyeos-run-server --serf ${InstallationDir}/src/eyeos-rabbitmq-auth-backend-h
 
 COPY . ${InstallationDir}
 
-RUN npm install --verbose && \
-    npm cache clean
+RUN apk update && \
+    /scripts-base/buildDependencies.sh --production --install && \
+    npm install --verbose --production && \
+    npm cache clean && \
+    /scripts-base/buildDependencies.sh --production --purgue && \
+    rm -rf /etc/ssl /var/cache/apk/* /tmp/*
