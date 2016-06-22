@@ -46,8 +46,8 @@ var settings = {
             db: process.env.EYEOS_RABBITMQ_AUTH_BACKEND_HTTP_MONGODB || "eyeos",
             collection: process.env.EYEOS_RABBITMQ_AUTH_BACKEND_HTTP_MONGOCOLLECTION || "vmuserservice"
         }
-    }
-   
+    },
+    useCluster: process.env.EYEOS_RABBITMQ_AUTH_BACKEND_HTTP_USE_CLUSTER === "true" || false
 };
 
 module.exports = settings;

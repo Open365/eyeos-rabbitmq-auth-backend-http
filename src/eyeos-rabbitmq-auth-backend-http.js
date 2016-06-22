@@ -37,17 +37,28 @@ var logger = log2out.getLogger('rabbitmq-auth-backend-http');
 
 logger.info('Current settings are:\n', settings);
 
-if (cluster.isMaster) {
-    // Fork workers.
-    for (var i = 0; i < numCPUs; i++) {
-        cluster.fork();
-    }
+var rabbitmqAuhBackendHttp, notifier;
 
-    cluster.on('exit', function(worker, code, signal) {
-        console.log('worker ' + worker.process.pid + ' died');
-    });
-} else {
-    var rabbitmqAuhBackendHttp = new Server();
+if (settings.useCluster) {
+    if (cluster.isMaster) {
+        // Fork workers.
+        for (var i = 0; i < numCPUs; i++) {
+            cluster.fork();
+        }
+
+        cluster.on('exit', function (worker, code, signal) {
+            console.log('worker ' + worker.process.pid + ' died');
+        });
+    } else {
+        startApplication();
+    }
+}
+else {
+    startApplication();
+}
+
+function startApplication () {
+    rabbitmqAuhBackendHttp = new Server();
 
     logger.info(">>>> Starting rabbitmqAuhBackendHttp in %s:%d",
         settings.bindAddress,
