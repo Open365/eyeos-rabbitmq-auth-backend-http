@@ -37,8 +37,6 @@ var logger = log2out.getLogger('rabbitmq-auth-backend-http');
 
 logger.info('Current settings are:\n', settings);
 
-var rabbitmqAuhBackendHttp, notifier;
-
 if (settings.useCluster) {
     if (cluster.isMaster) {
         // Fork workers.
@@ -58,15 +56,17 @@ else {
 }
 
 function startApplication () {
-    rabbitmqAuhBackendHttp = new Server();
+    var rabbitmqAuthBackendHttp, notifier;
 
-    logger.info(">>>> Starting rabbitmqAuhBackendHttp in %s:%d",
+    rabbitmqAuthBackendHttp = new Server();
+
+    logger.info(">>>> Starting rabbitmqAuthBackendHttp in %s:%d",
         settings.bindAddress,
         settings.port
     );
 
-    rabbitmqAuhBackendHttp.start(settings.bindAddress, settings.port);
+    rabbitmqAuthBackendHttp.start(settings.bindAddress, settings.port);
 
-    var notifier = new Notifier();
+    notifier = new Notifier();
     notifier.registerService();
 }
